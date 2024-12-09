@@ -1,68 +1,86 @@
 import tkinter as tk
+from tkinter import messagebox
 
+# Define the Tic Tac Toe board
+board = [[' ' for _ in range(3)] for _ in range(3)]
+
+# Define the player symbols
+player1 = 'Player 2'
+player2 = 'Player 1'
+current_player = player1
+
+# Define the winning combinations
+winning_combinations = []
+
+# Function to check if a player has won
+def check_winner():
+    for combination in winning_combinations:
+        if board[combination[0][0]][combination[0][1]] == board[combination[1][0]][combination[1][1]] == board[combination[2][0]][combination[2][1]] != ' ':
+            return True
+    return False
+
+# Function to check if the game is a draw
+def check_draw():
+    for row in board:
+        for cell in row:
+            if cell == ' ':
+                return False
+    return True
+
+# Function to make a move
+def make_move(row, col):
+    global current_player
+    if board[row][col] == ' ':
+        board[row][col] = current_player
+        if current_player == player1:
+            current_player = player2
+            buttons[row][col].config(bg='yellow')  # Change button color to yellow for player 2
+        else:
+            current_player = player1
+            buttons[row][col].config(bg='blue')  # Change button color to blue for player 1
+        if check_winner():
+            messagebox.showinfo("Tic Tac Toe", f"{current_player} wins!")
+            reset_board()
+        elif check_draw():
+            messagebox.showinfo("Tic Tac Toe", "It's a draw!")
+            reset_board()
+    else:
+        messagebox.showerror("Tic Tac Toe", "Invalid move!")
+
+# Function to reset the board
+def reset_board():
+    global board, current_player
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    current_player = player1
+    for row in range(3):
+        for col in range(3):
+            buttons[row][col].config(text=' ', bg='white')
+
+# Create the GUI
 root = tk.Tk()
-root.geometry("300x200")
+root.title("Tic Tac Toe")
 
+buttons = [[None for _ in range(3)] for _ in range(3)]
+for row in range(3):
+    for col in range(3):
+        button = tk.Button(root, text=' ', font=('Arial', 24), width=3, height=2, command=lambda r=row, c=col: make_move(r, c))
+        button.grid(row=row, column=col)
+        buttons[row][col] = button
 
-# print(eingabefeld_wert.get())
-# textausgabe = tk.Label(root, text=kelvin, bg="yellow")
-# textausgabe.pack()''
-def logic(x ,y):
-buttonscoulor[0][0]="white"
-for x in range(3):
-	for y in range(3):
-		buttonscoulor[x][y]="white"
-i=0
-while i in range(0,3):
-	j = 0
-	while j in 3:
-		if buttonscoulor[x][y]=="white":
-			if player == 1:
-				buttonscoulor[x][y]="yellow"
-				player = 2
-			else:
-				buttonscoulor[x][y]="red"
-				player = 1
-			
-			textlos = tk.Label(root, text="", bg="white")
-			textlos.pack
+reset_button = tk.Button(root, text='Reset', font=('Arial', 12), command=reset_board)
+reset_button.grid(row=3, column=1)
 
-			h = 0
-			g=0
-			while g in range(3):
-				if (([g][h] != "white")& (buttonscoulor[g][h]) == (buttonscoulor[g][h + 1])& (buttonscoulor[g][h + 1]) == (buttonscoulor[g][h + 2])						#Zeile abchecken
-				| (buttonscoulor[h][g] != "white")& (buttonscoulor[h][g]) == (buttonscoulor[h + 1][g])& (buttonscoulor[h + 1][g]) == (buttonscoulor[h + 2][g])			#Spalte abchecken
-				| (buttonscoulor[1][1] != "white")& (buttonscoulor[0][0]) == (buttonscoulor[1][1])& (buttonscoulor[1][1]) == (buttonscoulor[2][2])						#Diagonale1 abchecken
-				| (buttonscoulor[1][1] != "white")& (buttonscoulor[0][2]) == (buttonscoulor[1][1])& (buttonscoulor[1][1]) == (buttonscoulor[2][0])):					#Diagonale2 abchecken
-					if player == 1:
-						P1won = tk.Label(root, text="Spieler 1 hat gewonnen!", bg="yellow")
-						P1won.pack
-					else: 
-						P2won = tk.Label(root,  text="Spieler 2 hat gewonnen!", bg="red")
-						P2won.pack
-		j=+1			
-	i=+1		
-	if buttonscoulor[x][y]!="white": 
-		textausgabe = tk.Label(root, text="Das darfst du nicht!!!", bg="green")
-		textausgabe.pack
-
-schaltf0 = tk.Button(root, bg="white", command=logic(0,0))
-schaltf1 = tk.Button(root, bg="white", command=logic(0,1))
-schaltf2 = tk.Button(root, bg="white", command=logic(0,2))
-schaltf3 = tk.Button(root, bg="white", command=logic(1,0))
-schaltf4 = tk.Button(root, bg="white", command=logic(1,1))
-schaltf5 = tk.Button(root, bg="white", command=logic(1,2))
-schaltf6 = tk.Button(root, bg="white", command=logic(2,0))
-schaltf7 = tk.Button(root, bg="white", command=logic(2,1))
-schaltf8 = tk.Button(root, bg="white", command=logic(2,2))
-schaltf0.pack()
-schaltf1.pack()
-schaltf2.pack()
-schaltf3.pack()
-schaltf4.pack()
-schaltf5.pack()
-schaltf6.pack()
-schaltf7.pack()
-schaltf8.pack()
+# Define the winning combinations
+winning_combinations = [
+    [(0, 0), (0, 1), (0, 2)],  # Row 1
+    [(1, 0), (1, 1), (1, 2)],  # Row 2
+    [(2, 0), (2, 1), (2, 2)],  # Row 3
+    [(0, 0), (1, 0), (2, 0)],  # Column 1
+    [(0, 1), (1, 1), (2, 1)],  # Column 2
+    [(0, 2), (1, 2), (2, 2)],  # Column 3
+    [(0, 0), (1, 1), (2, 2)],  # Diagonal 1
+    [(0, 2), (1, 1), (2, 0)]   # Diagonal 2
+]
 
 root.mainloop()
+
